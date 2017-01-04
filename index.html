@@ -10,19 +10,21 @@
         <link rel="stylesheet" href="https://unpkg.com/tachyons@4.3.1/css/tachyons.min.css" />
 
     </head>
-
     <body>
-        <header class="tc pv4 pv7-ns">
-            <img src="images/clear.png" class="br-100 pa1 ba b--black-10 h3 w3" alt="avatar" id='imageid'>
-            <h1 class="f5 f4-ns fw6 mid-gray message">Loading...</h1>
-            <h2 class="f6 gray fw2 tracked location"></h2>
-            <a class="f6 link br-pill ph3 pv2 mb2 dib white bg-purple mt4" href="#0" id='temp' onclick="changeText(this)">
-      Loading...
-      <!-- <span id='degrees'>Measuring</span>˚ <span id='units'>Temperature</span> -->
-    </a>
-
+        <header class="tc pv4 pv6-ns">
+          <img src="images/clear.png" class="br-100 pa1 ba b--black-10 h3 w3" alt="avatar" id='imageid'>
+          <h1 class="f5 f4-ns fw6 mid-gray message">Local Weather</h1>
+          <h2 class="f6 gray fw2 tracked location"></h2>
+          <form class="pa4 black-80" onSubmit="return getCityWeather()">
+            <div class="measure center">
+              <input id="name" class="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc" placeholder='Please Enter Your Location...'>
+            </div>
+          </form>
+          <p class="place"></p>
+          <a class="f6 link br-pill ph3 pv2 mb2 dib white bg-purple mt4" href="#0" id='temp' onclick="changeText(this)">Type in your location and then hit enter.
+            <!-- <span id='degrees'>Measuring</span>˚ <span id='units'>Temperature</span> -->
+          </a>
         </header>
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
 
 
@@ -32,8 +34,8 @@
             var apiKey = '59da1c06dabd180a90bd04166b2c19d1'
             var lati;
             var long;
-            var unitsy = 'metric'
-            var unit = 'Celsius'
+            var unitsy = 'metric';
+            var unit = 'Celsius';
 
             $(document).ready(function() {
                 $.getJSON('http://ip-api.com/json',
@@ -47,7 +49,8 @@
 
             function senOpenWeatherReq(long, lati) {
                 $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + lati + "&lon=" + long + "&APPID=" + apiKey + '&units=' + unitsy, function(data) {
-                    $(".message").html(data.weather[0].description.toUpperCase())
+
+                    $(".message").html(data.weather[0].description.toUpperCase());
                     $("#temp").html(data.main.temp + '˚ ' + unit);
 
                     switch(data.weather[0].icon.substring(0, 2)) {
@@ -86,24 +89,62 @@
                 });
             }
 
-            function changeText(id) {
 
+            function getCityWeather() {
+                event.preventDefault();
+                var city = $('input').val()
+                $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiKey + '&units=' + unitsy, function(data) {
+                    $(".message").html(data.weather[0].description.toUpperCase());
+                    $(".place").html(data.name.toUpperCase());
+                    $("#temp").html(data.main.temp + '˚ ' + unit);
+
+                    switch(data.weather[0].icon.substring(0, 2)) {
+                        case '01':
+                            document.getElementById("imageid").src= "images/clear.png";
+                            break;
+                        case '02':
+                            document.getElementById("imageid").src= "images/partly-cloudy.png";
+                            break;
+                        case '03':
+                            document.getElementById("imageid").src= "images/cloudy_s_sunny.png";
+                            break;
+                        case '04':
+                            document.getElementById("imageid").src= "images/cloudy.png";
+                            break;
+                        case '09':
+                            document.getElementById("imageid").src= "images/scattered-showers.png";
+                            break;
+                        case '10':
+                            document.getElementById("imageid").src= "images/rain.png";
+                            break;
+                        case '11':
+                            document.getElementById("imageid").src= "images/thunderstorm.png";
+                            break;
+                        case '13':
+                            document.getElementById("imageid").src= "images/snow.png";
+                            break;
+                        case '50':
+                            document.getElementById("imageid").src= "images/fog.png";
+                            break;
+                        default:
+                            document.getElementById("imageid").src= "images/clear.png";
+                    }
+                });
+            }
+
+            function changeText(id) {
                 if (id.innerHTML.includes('Celsius')) {
                   unitsy = 'imperial';
                   unit = 'Fahrenheit'
                   senOpenWeatherReq(long, lati);
-
                 } else {
-
                   unitsy = 'metric';
                   unit = 'Celsius';
                   senOpenWeatherReq(long, lati);
-
-
-
                 }
 
             }
+
 
         </script>
 
