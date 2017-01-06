@@ -21,7 +21,7 @@
             </div>
           </form>
           <p class="place"></p>
-          <a class="f6 link br-pill ph3 pv2 mb2 dib white bg-purple mt4" href="#0" id='temp' onclick="changeText(this)">Type in your location and then hit enter.
+          <a class="f6 link br-pill ph3 pv2 mb2 dib white bg-purple mt4" href="#0" id='temp' onclick="getCityWeather()">Type in your location and then hit enter.
             <!-- <span id='degrees'>Measuring</span>˚ <span id='units'>Temperature</span> -->
           </a>
         </header>
@@ -37,15 +37,15 @@
             var unitsy = 'metric';
             var unit = 'Celsius';
 
-            $(document).ready(function() {
-                $.getJSON('http://ip-api.com/json',
-                    function(location) {
-                        lati = location.lat;
-                        long = location.lon;
-                        $(".location").html(location.city);
-                        senOpenWeatherReq(long, lati);
-                    });
-            })
+            // $(document).ready(function() {
+            //     $.getJSON('http://ip-api.com/json',
+            //         function(location) {
+            //             lati = location.lat;
+            //             long = location.lon;
+            //             $(".location").html(location.city);
+            //             senOpenWeatherReq(long, lati);
+            //         });
+            // })
 
             function senOpenWeatherReq(long, lati) {
                 $.getJSON("http://api.openweathermap.org/data/2.5/weather?lat=" + lati + "&lon=" + long + "&APPID=" + apiKey + '&units=' + unitsy, function(data) {
@@ -132,18 +132,18 @@
                 });
             }
 
-            function changeText(id) {
-                if (id.innerHTML.includes('Celsius')) {
-                  unitsy = 'imperial';
-                  unit = 'Fahrenheit'
-                  senOpenWeatherReq(long, lati);
-                } else {
-                  unitsy = 'metric';
-                  unit = 'Celsius';
-                  senOpenWeatherReq(long, lati);
-                }
-
-            }
+            // function changeText(id) {
+            //     if (id.innerHTML.includes('Celsius')) {
+            //       unitsy = 'imperial';
+            //       unit = 'Fahrenheit'
+            //       senOpenWeatherReq(long, lati);
+            //     } else {
+            //       unitsy = 'metric';
+            //       unit = 'Celsius';
+            //       senOpenWeatherReq(long, lati);
+            //     }
+            //
+            // }
 
 
         </script>
